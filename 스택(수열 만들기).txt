@@ -1,0 +1,127 @@
+//📘 1874번: 스택 수열(실버 2)
+//문제 설명
+//스택(stack)을 이용해서 1부터 N까지의 수를 하나씩 오름차순으로 스택에 넣었다가 빼면서 특정 수열을 만들 수 있는지를 판단하고, 
+// 만들 수 있다면 push(+), pop(-) 연산 순서를 출력하는 문제입니다.
+//
+//🔐 문제 조건 요약
+//1부터 N까지의 수를 스택에 오름차순으로 push할 수 있음
+//
+//pop은 언제든 할 수 있음
+//
+//주어진 수열이 스택을 이용해서 만들어질 수 있는지 판단하고, 그 과정을 출력
+//
+//📥 입력
+//첫째 줄에 n(1 ≤ n ≤ 100, 000)
+//
+//다음 n개의 줄에 수열의 각 수가 하나씩 주어짐(1~n)
+//
+//📤 출력
+//스택을 이용해 입력 수열을 만들 수 있으면
+//+ , -로 연산을 한 줄에 하나씩 출력
+//
+//만들 수 없다면 NO 출력
+//
+//🧠 예제
+//입력
+//8
+//4
+//3
+//6
+//8
+//7
+//5
+//2
+//1
+// 
+//출력
+//+
+//+
+//+
+//+
+//-
+//-
+//+
+//+
+//-
+//+
+//+
+//-
+//-
+//-
+//-
+//-
+//✅ 풀이 아이디어
+//1부터 N까지 숫자를 스택에 push
+//
+//수열의 현재 숫자와 스택 top이 같으면 pop
+//
+//그렇지 않으면 계속 push하면서 조건 맞출 수 있는지 시도
+
+
+
+
+
+#include <iostream>
+#include <stack>
+#include <vector>
+using namespace std;
+
+int main() {
+	ios::sync_with_stdio(false);
+	cin.tie(NULL);
+	cout.tie(NULL);
+
+	int n;
+	cin >> n;
+
+	vector<int> v(n);
+	for (int i = 0; i < n; i++) {
+		cin >> v[i];
+	}
+
+	int num = 1; //이번에 스택에 넣을 수
+	stack<int> s;
+	bool result = true;
+	vector<char> resultSt;
+
+	for (int i = 0; i < n; i++) {
+		int now = v[i]; //만들어야하는 수
+		if (now >= num) {
+			while (now >= num) {
+				s.push(num++);
+				resultSt.push_back('+');
+			}
+			s.pop();
+			resultSt.push_back('-');
+		}
+		else {
+			int tmp = s.top();
+			s.pop();
+			if (tmp > now) {
+				cout << "NO";
+				result = false;
+				break;
+			}
+			else
+				resultSt.push_back('-');
+		}
+	}
+
+	if (result) {
+		for (int i = 0; i < resultSt.size(); i++) {
+			cout << resultSt[i] << "\n";
+		}
+	}
+
+}
+
+
+
+
+
+
+
+
+
+
+

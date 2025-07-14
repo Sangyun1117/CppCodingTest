@@ -1,0 +1,86 @@
+// 🔍 백준 2531번 - 회전 초밥 (Silver 1) (유형: 슬라이딩 윈도우 + 중복 제거)
+//         📘 문제 설명
+//         민수는 초밥집에 왔다. 이 초밥집은 벨트 위에 초밥이 N개가 원형으로 돌고 있고,
+//         민수는 k개의 접시를 연속해서 먹을 수 있다.
+//
+//         초밥 종류는 1부터 d번까지 존재한다.
+//         또한, 민수는 쿠폰 번호를 갖고 있어 초밥 종류 c는 항상 무료로 한 개 추가로 먹을 수 있다.
+//         회전초밥에 쿠폰 초밥이 존재하지 않아도 시켜서 먹을 수 있다.
+//
+//         민수가 먹을 수 있는 최대 가짓수의 초밥 종류를 구하라.
+//
+//         ✅ 입력 형식
+//         첫 줄에 N, d, k, c가 주어진다.
+//         (2 ≤ k ≤ N ≤ 3,000,000, 2 ≤ d ≤ 3,000, 1 ≤ c ≤ d)
+//
+//         이후 N줄에 걸쳐 각 위치의 초밥 종류가 주어진다. (1 ≤ 번호 ≤ d)
+//
+//         ✅ 출력 형식
+//         먹을 수 있는 초밥 종류의 최대 가짓수를 출력하라.
+//
+//         💡 예제 입력
+//         8 30 4 30
+//         7
+//         9
+//         7
+//         30
+//         2
+//         7
+//         9
+//         25
+//         💡 예제 출력
+//         5
+//         🔥 핵심 아이디어
+//         슬라이딩 윈도우를 사용하여 k개의 초밥을 확인
+//
+//         각 윈도우마다 종류 수를 세되, 쿠폰 번호 c가 없으면 +1
+//
+//         중복 제거를 위해 HashMap 또는 int[] count를 활용
+//
+//         배열을 원형으로 이어서 처리 (인덱스 % N)
+
+#include <iostream>
+using namespace std;
+
+int main()
+{
+
+    ios::sync_with_stdio(false);
+    cin.tie(NULL);
+
+    int n, d, k, c; // n: 초밥 개수, d: 초밥 종류의 수, k: 연속해서 먹을 수 있는 접시 수, c: 항상 무료로 한 개 먹을 수 있는 초밥
+
+    cin >> n >> d >> k >> c;
+
+    int table[n];
+
+    for (int i = 0; i < n; i++)
+    {
+        cin >> table[i];
+    }
+
+    int observer[d + 1] = {};
+    int count = 0;
+    for (int i = 0; i < k; i++)
+    {
+        if (observer[table[i]]++ == 0)
+            count++;
+    }
+    int maxCount = count;
+    for (int i = k; i < k + n; i++)
+    {
+        int now = table[i % n];
+        int prev = table[(i - k) % n];
+        if (--observer[prev] == 0)
+            count--;
+        if (observer[now]++ == 0)
+            count++;
+
+        int currentCount = count;
+        if (observer[c] == 0)
+            currentCount++;
+        maxCount = max(maxCount, currentCount);
+    }
+    cout << maxCount;
+    return 0;
+}

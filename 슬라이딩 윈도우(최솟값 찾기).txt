@@ -1,0 +1,75 @@
+//📘 11003번: 최솟값 찾기(플레티넘 5)
+//문제
+//N개의 수 A1, A2, ..., AN과 L이 주어진다.
+//
+//D[i] = A[i−L + 1] ~A[i] 중의 최솟값이라고 할 때,
+//D[1], D[2], ..., D[N]을 구하는 프로그램을 작성하시오.
+//(단, A[i−L + 1] ~A[i] 중에서 인덱스가 1보다 작으면 빼고 계산한다.)
+//
+//입력
+//첫째 줄에 N과 L이 주어진다. (1 ≤ L ≤ N ≤ 5, 000, 000)
+//
+//둘째 줄에는 N개의 수 Ai가 주어진다. (| Ai | ≤ 1, 000, 000, 000)
+//
+//출력
+//첫째 줄에 D[1] ~D[N]을 공백으로 구분해 출력한다.
+//
+//예제 입력 1
+//12 3
+//1 5 2 3 6 2 3 7 3 5 2 6
+// 
+//예제 출력 1
+//1 1 1 2 2 2 2 2 3 3 2 2
+//🔑 풀이 아이디어 : 슬라이딩 윈도우 + 덱(deque)
+//이 문제는 고정 크기 L의 윈도우에서 최소값을 실시간으로 구해야 하므로,
+//일반 배열로는 O(NL) 시간 → 시간 초과 💥
+//➡ deque(덱)를 활용해 O(N)에 해결 가능
+//
+//✅ 덱 사용 방법
+//덱에는 현재 윈도우에서 최솟값이 될 가능성 있는 인덱스만 저장
+//
+//새로 들어오는 수보다 덱 뒤쪽 값이 더 크면 덱에서 제거
+//
+//윈도우 범위를 벗어난 값은 덱 앞에서 제거
+
+
+
+
+#include <iostream>
+#include <deque>
+using namespace std;
+typedef pair<int, int> Node;
+
+int main() {
+	ios::sync_with_stdio(false);
+	cin.tie(NULL);
+	cout.tie(NULL);
+	int n, l;
+	cin >> n >> l;
+	deque<Node> deque;
+	for (int i = 0; i < n; i++) {
+		int now;
+		cin >> now;
+
+		while (!deque.empty() && deque.back().first > now) {
+			deque.pop_back();
+		}
+		deque.push_back(Node(now, i));
+
+		if (deque.front().second <= i - l)
+			deque.pop_front();
+		cout << deque.front().first << " ";
+	}
+
+}
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,104 @@
+//📘 1253번: 좋다(골드 4)
+//문제
+//N개의 수로 이루어진 수열이 있다.이 수열에서 서로 다른 두 수의 합으로 표현되는 수가 있다면 그 수를 좋다고 한다.
+//N개의 수가 주어졌을 때, 그 중에서 좋은 수의 개수는 몇 개인지 출력하라.
+//
+//수의 위치가 다르면 값이 같아도 다른 수이다.
+//
+//입력
+//첫째 줄에는 수의 개수 N(1 ≤ N ≤ 2, 000)이 주어진다.
+//둘째 줄에는 N개의 수가 주어진다.입력으로 주어지는 수는 $1, 000, 000, 000$보다 작은 정수이다.
+//
+//출력
+//좋은 수의 개수를 출력한다.
+//
+//예제 입력 1
+//10
+//1 2 3 4 5 6 7 8 9 10
+// 
+//예제 출력 1
+//8
+// 
+//🔑 풀이 아이디어(투 포인터 + 정렬)
+//어떤 수 x가 있을 때, 나머지 수들 중 두 수를 골라 a + b = x가 되면 x는 좋은 수.
+//
+//즉, x = A[k]에 대해 나머지 인덱스 중 두 수의 합으로 x가 되는 쌍이 있는지를 투 포인터로 확인.
+//
+//알고리즘 순서 :
+//수열을 정렬한다.
+//
+//각 수 A[i]에 대해 다음을 수행 :
+//
+//투 포인터 사용 : left = 0, right = N - 1
+//
+//left == i 혹은 right == i면 넘어간다(자기 자신은 제외)
+//
+//A[left] + A[right] == A[i]이면 → 좋은 수, count++
+//
+//합이 작으면 left++, 크면 right--
+//
+//반복 후 count 출력
+
+
+
+#include <iostream>
+#include <vector>
+#include <algorithm>
+using namespace std;
+
+
+int main()
+{
+	ios::sync_with_stdio(false);
+	cin.tie(NULL);
+	cout.tie(NULL);
+
+	int n;
+	cin >> n;
+	vector<int> v(n);
+	for (int i = 0; i < n; i++) {
+		cin >> v[i];
+	}
+
+	sort(v.begin(), v.end());
+	int count = 0;
+
+	for (int nowIndex = 0; nowIndex < n; nowIndex++) {
+		long now = v[nowIndex];
+		int left = 0;
+		int right = n - 1;
+
+		while (left < right) {
+			if (now == v[left] + v[right]) {
+				if (left != nowIndex && right != nowIndex) {
+					count++;
+					break;
+				}
+				else if (left == nowIndex)
+					left++;
+				else if (right == nowIndex)
+					right--;
+
+			}
+			else if (now < v[left] + v[right]) {
+				right--;
+			}
+			else
+				left++;
+		}
+	}
+
+	cout << count << "\n";
+
+}
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,131 @@
+//📘 12891번: DNA 비밀번호 (실버 2)
+//문제
+//평소에 문자열을 가지고 노는 것을 좋아하는 민호는 DNA 문자열을 알게 되었다.
+//DNA 문자열은 모든 문자가 'A', 'C', 'G', 'T'인 문자열을 말한다.
+//
+//민호는 DNA 문자열에 어떤 부분 문자열을 뽑았을 때,
+//부분 문자열에 포함된 'A', 'C', 'G', 'T'의 개수가 일정 개수 이상이어야 비밀번호로 사용할 수 있다고 생각했다.
+//
+//예를 들어 DNA 문자열이 "ACGTACGT" 이고,
+//비밀번호로 사용할 부분 문자열의 길이가 4라고 하자.
+//그리고 부분 문자열에 포함돼야 할 'A', 'C', 'G', 'T'의 최소 개수가 각각 1, 0, 1, 0이라고 하면,
+//민호는 다음과 같은 부분 문자열을 비밀번호로 사용할 수 있다.
+//
+//"ACGT" (0~3)
+//
+//"CGTA" (1~4)
+//
+//"GTAC" (2~5)
+//
+//"TACG" (3~6)
+//
+//"ACGT" (4~7)
+//
+//민호는 문자열과 비밀번호로 사용할 부분 문자열의 길이, 그리고 각 문자의 최소 개수가 주어졌을 때
+//조건에 맞는 부분 문자열의 개수를 구하는 프로그램을 작성하려 한다.
+//
+//입력
+//첫 번째 줄에 DNA 문자열의 길이 S와 비밀번호로 사용할 부분 문자열의 길이 P가 주어진다. (1 ≤ P ≤ S ≤ 1, 000, 000)
+//
+//두 번째 줄에는 DNA 문자열이 주어진다.문자열은 'A', 'C', 'G', 'T'만으로 구성된다.
+//
+//세 번째 줄에는 부분 문자열에 포함돼야 할 'A', 'C', 'G', 'T'의 최소 개수가 공백으로 구분되어 주어진다.
+//이 순서는 항상 A, C, G, T 순이다.
+//
+//출력
+//조건에 맞는 부분 문자열의 개수를 출력한다.
+//
+//예제 입력 1
+//8 4
+//ACGTACGT
+//1 0 1 0
+// 
+//예제 출력 1
+//5
+// 
+//🔑 풀이 아이디어 : 슬라이딩 윈도우
+//길이가 P인 윈도우를 슬라이딩하면서 각 문자('A', 'C', 'G', 'T')의 개수를 관리
+//
+//시작 윈도우에서 카운트 초기화 → 조건 만족하는지 확인
+//
+//그 뒤에는 왼쪽 문자 하나 제거, 오른쪽 문자 하나 추가 → 개수 갱신
+//
+//각 단계마다 최소 조건 만족하는지 검사하여 count 증가
+
+
+
+
+#include <iostream>
+using namespace std;
+
+int dnaNum[4] = {};
+
+bool checking(int checkNum[]) {
+	bool check = true;
+	for (int i = 0; i < 4; i++) {
+		if (dnaNum[i] > checkNum[i]) {
+			check = false;
+			break;
+		}
+	}
+
+	return check;
+}
+
+int codeToIndex(char c) {
+	switch (c) {
+	case 'A': return 0;
+	case 'C': return 1;
+	case 'G': return 2;
+	case 'T': return 3;
+	}
+}
+
+int main() {
+	ios::sync_with_stdio(false);
+	cin.tie(NULL);
+	cout.tie(NULL);
+
+	int s, p;
+	cin >> s >> p;
+
+	string dna;
+	cin >> dna;
+
+	for (int i = 0; i < 4; i++) {
+		cin >> dnaNum[i];
+	}
+
+	int checkNum[4] = {};
+	for (int i = 0; i < p; i++) {
+		int index = codeToIndex(dna[i]);
+		checkNum[index]++;
+	}
+
+	int count = 0;
+	if (checking(checkNum))
+		count++;
+
+	for (int i = p; i < dna.size(); i++) {
+		int prevIndex = codeToIndex(dna[i - p]);
+		int nextIndex = codeToIndex(dna[i]);
+		checkNum[prevIndex]--;
+		checkNum[nextIndex]++;
+
+		if (checking(checkNum))
+			count++;
+	}
+
+	cout << count;
+}
+
+
+
+
+
+
+
+
+
+
+
