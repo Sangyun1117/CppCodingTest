@@ -14,10 +14,10 @@ int solution(string begin, string target, vector<string> words) {
     
     queue<state> q;
     vector<bool> visited(words.size(), false);
-    for(int i=0; i<words.size(); ++i){
-        if(begin == words[i])
-            visited[i] = true;
-    }
+    // for(int i=0; i<words.size(); ++i){
+    //     if(begin == words[i])
+    //         visited[i] = true;
+    // }
     q.push({begin, 0});
     
     while(!q.empty()){
