@@ -1,30 +1,24 @@
 #include <string>
 #include <vector>
-#include <stack>
 using namespace std;
+int answer = 0;
 
-using state = pair<int,int>; //누적합, 현재인덱스
-
-int solution(vector<int> numbers, int target) {
-    int answer = 0;
-
-    stack<state> s;
-    
-    s.push({numbers[0], 0});
-    s.push({-numbers[0], 0});
-    
-    while(!s.empty()){
-        state now = s.top(); s.pop();
-        int nowValue = now.first;
-        int nowIdx = now.second;
-        if(nowIdx == numbers.size() - 1){
-            if(nowValue == target)
-                answer++;
-        }else{
-            s.push({nowValue + numbers[nowIdx+1], nowIdx+1});
-            s.push({nowValue - numbers[nowIdx+1], nowIdx+1});
+void dfs(int num, int target, int depth, vector<int> &numbers){
+    if(depth==numbers.size()){
+        if(target == num){
+            answer = answer + 1;
         }
+
+        return;
     }
     
+    dfs(num + numbers[depth], target, depth+1, numbers);
+    dfs(num - numbers[depth], target, depth+1, numbers);  
+  
+}
+
+int solution(vector<int> numbers, int target) {
+    dfs(0, target, 0, numbers);
+
     return answer;
 }
