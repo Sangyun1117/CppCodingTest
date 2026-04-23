@@ -1,67 +1,67 @@
-
-
 #include <iostream>
 #include <vector>
 #include <queue>
+
 using namespace std;
-int dx[4] = { 0,0,1,-1 };
-int dy[4] = { 1,-1,0,0 };
-struct Pos {
-	int y;
-	int x;
-	int count;
-};
-int main() {
+
+using pos = pair<int, int>;
+
+int dx[] = { -1, 0, 1, 0 };
+int dy[] = { 0, 1, 0, -1 };
+
+
+int main(void) {
+
 	ios::sync_with_stdio(false);
 	cin.tie(NULL);
 	cout.tie(NULL);
 
-	int m, n;
-	cin >> m >> n; //m은 가로, n은 세로
-	vector<vector<int>>arr(n, vector<int>(m, 0));
-	vector<vector<bool>>visited(n, vector<bool>(m, 0));
-	vector<Pos>firstTomato;
-	queue<Pos> q;
-	int nowTomato = 0;
-	int wantTomato = n * m;
-	for (int i = 0; i < n; ++i) {
-		for (int j = 0; j < m; ++j) {
-			cin >> arr[i][j];
-			if (arr[i][j] == 1) {
-				q.push({ i, j, 0 });
-				visited[i][j] = true;
-				nowTomato++;
+	int n, m;
+	cin >> m >> n;
+
+	vector<vector<int>> map(n, vector<int>(m, 0));
+
+	queue <pos> q;
+
+	int allTomato = 0;
+	int checkTomato = 0;
+	int day = 1;
+
+	for (int i = 0; i < n; i++) {
+		for (int j = 0; j < m; j++) {
+			cin >> map[i][j];
+			if (map[i][j] == 1) {
+				q.push({ i, j });
+				checkTomato++;
 			}
-			else if (arr[i][j] == -1) {
-				wantTomato--;
-			}
+
+			if (map[i][j] != -1) allTomato++;
 		}
 	}
 
-	int answer = 0;
 	while (!q.empty()) {
-		Pos now = q.front(); q.pop();
-		int nowY = now.y;
-		int nowX = now.x;
-		int nowCount = now.count;
+		pos cur = q.front(); q.pop();
 
-		for (int i = 0; i < 4; ++i) {
-			int nextY = nowY + dy[i];
-			int nextX = nowX + dx[i];
-
-			if (nextY < 0 || nextY >= n || nextX < 0 || nextX >= m)
-				continue;
-			if (visited[nextY][nextX] || arr[nextY][nextX] != 0)
-				continue;
-			visited[nextY][nextX] = true;
-			q.push({ nextY, nextX, nowCount + 1 });
-			nowTomato++;
-			answer = max(answer, nowCount + 1);
+		for (int i = 0; i < 4; i++) {
+			int nx = cur.first + dx[i];
+			int ny = cur.second + dy[i];
+			if (nx < 0 || nx >= n || ny < 0 || ny >= m) continue;
+			if (map[nx][ny] == 0) {
+				map[nx][ny] = map[cur.first][cur.second] + 1;
+				day = max(day, map[nx][ny]);
+				checkTomato++;
+				q.push({ nx, ny });
+			}
 		}
 	}
-	if (nowTomato == wantTomato)
-		cout << answer;
-	else
+
+	if (checkTomato < allTomato)
+	{
 		cout << -1;
+	}
+	else
+	{
+		cout << day-1;
+	}
 
 }
